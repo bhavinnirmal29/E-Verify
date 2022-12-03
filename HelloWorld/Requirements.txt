@@ -1,0 +1,22 @@
+Personal Information after Login
+
+First name
+last name
+
+phone
+
+email
+
+address
+
+occupation
+
+type of account
+
+upload document
+
+In Dashboard 
+Account summary
+balance:
+type of account
+

@@ -1,0 +1,108 @@
+{% extends 'index.html' %}
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+{% block content %}
+<section>
+<br>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+              <h2 class="row justify-content-center">Register</h2>
+            </div>
+            <div class="card-body">
+                <div class="row justify-content-center">
+                    <h5 class="card-title democolor">Register yourself to get the ultimate banking experience.</h5>
+                </div>
+              <form name="RegisterForm" action="{% url 'register' %}" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                  <div class="col-md-6 mb-4">
+                    <div class="form-outline">
+                      <input type="text" name="firstName" class="form-control form-control-lg" required/>
+                      <label class="form-label" for="firstName">First Name</label>
+                    </div>
+  
+                  </div>
+                  <div class="col-md-6 mb-4">
+  
+                    <div class="form-outline">
+                      <input type="text" name="lastName" class="form-control form-control-lg" required/>
+                      <label class="form-label" for="lastName">Last Name</label>
+                    </div>
+  
+                  </div>
+                </div>
+  
+                <div class="row">
+                  <div class="col-md-6 mb-4 d-flex align-items-center">
+  
+                    <div class="form-outline datepicker w-100">
+                      <input type="text" name="dob" class="form-control form-control-lg" id="birthdayDate" placeholder="YYYY-MM-DD" required/>
+                      <label for="birthdayDate" class="form-label">Birthday</label>
+                    </div>
+  
+                  </div>
+                  <div class="col-md-6 mb-4"> 
+                    <h6 class="mb-2 pb-1">Gender: </h6>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="femaleGender"
+                        value="Female" checked />
+                      <label class="form-check-label" for="femaleGender">Female</label>
+                    </div>
+  
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="maleGender"
+                        value="Male" />
+                      <label class="form-check-label" for="maleGender">Male</label>
+                    </div>
+  
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="inlineRadioOptions" id="otherGender"
+                        value="option3" />
+                      <label class="form-check-label" for="otherGender">Other</label>
+                    </div>
+                  </div>
+                </div>
+  
+                <div class="row">
+                  <div class="col-md-6 mb-4 pb-2">
+                    <div class="form-outline">
+                      <input type="email" name="emailAddress" class="form-control form-control-lg" required/>
+                      <label class="form-label" for="emailAddress">Email</label>
+                    </div>
+  
+                  </div>
+                  <div class="col-md-6 mb-4 pb-2">
+                    <div class="form-outline">
+                      <input type="tel" name="phoneNumber" class="form-control form-control-lg" required/>
+                      <label class="form-label" for="phoneNumber">Phone Number</label>
+                    </div>
+                  </div>             
+                </div>
+                  <div class="row">
+                    <div class="col-md-6 mb-4 pb-2">
+                      <div class="form-outline">
+                        <input type="password" name="pwd" class="form-control form-control-lg" required/>
+                        <label class="form-label" for="pwd">Password</label>
+                      </div>
+                    </div>
+                    <div class="col-md-6 mb-4 pb-2">
+                      <div class="form-outline">
+                        <input type="password" name="pwd1" class="form-control form-control-lg" required/>
+                        <label class="form-label" for="pwd1">Confirm Password</label>
+                      </div>
+                    </div>
+                  </div>
+                <div class="row justify-content-center">
+                    <div class="mt-4 pt-2">
+                        <input class="btn btn-primary btn-lg" type="submit" value="Register" />
+                    </div>
+                </div>
+              </form>
+            </div>
+          </div>
+    </div>
+</section>
+    <br>
+{% endblock content %}
