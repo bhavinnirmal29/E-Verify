@@ -30,9 +30,15 @@
                   <a class="nav-link nav-link-style" href="#">Help</a>
                 </li>
               </ul>
-              <a class="btn btn-outline-success" href="{% url 'login' %}">Login</a>
-              &nbsp;&nbsp;
-              <a class="btn btn-outline-success" href="{% url 'register' %}">Register</a>
+              {% if uname1 %}
+                    <a class="btn btn-outline-success" href="#">{{uname1}}</a>
+                    &nbsp;&nbsp;
+                    <a class="btn btn-outline-success" href="{% url 'logout' %}">Logout</a>
+              {% else %}
+                    <a class="btn btn-outline-success" href="{% url 'login' %}">Login</a>
+                    &nbsp;&nbsp;
+                    <a class="btn btn-outline-success" href="{% url 'register' %}">Register</a>
+              {% endif %}
             </div>
           </nav>
           {% block content%}

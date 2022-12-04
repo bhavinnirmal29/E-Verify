@@ -105,4 +105,9 @@
     </div>
 </section>
     <br>
+
+{% if alert_flag %}
+    <script>alert("Passwords do not match")</script>  
+{% endif %}
+
 {% endblock content %}

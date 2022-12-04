@@ -9,6 +9,9 @@ class User1(models.Model):
     phonenumber= models.IntegerField()
     password = models.CharField(max_length=50)
     confirmPwd = models.CharField(max_length=50)
+    
+    def __str__(self):
+        return self.email
 
 class PersonalInfo(models.Model):
     firstname= models.CharField(max_length=25)

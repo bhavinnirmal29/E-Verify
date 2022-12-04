@@ -28,8 +28,9 @@ urlpatterns = [
     path("login",views.login,name="login"),
     path('get_doc/',views.get_doc,name='get_doc'),
     path('get_face/',views.get_face,name='get_face'),
-    path("personal_information/",views.personal_information,name="personal_information"),
+    path("personal_information/",views.personal_information,name='personal_information'),
     path('compare_faces/',views.compare_faces,name='compare_faces'),
+    path('logout/', views.logout, name='logout'),
     
     
     path("index", Home, name="index"),

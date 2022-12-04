@@ -92,10 +92,20 @@ def delete_in_folder_images():
                         print('Failed to delete %s. Reason: %s' % (file_path, e))
 
 def Home(request):
-    return render(request,"index.html")
+    if 'user' in request.session:
+        current_user = request.session['user']
+        param = {'uname1': current_user}
+        return render(request, 'index.html', param)
+    else:
+        return render(request,"index.html")
 
 def aboutUs(request):
-    return render(request,"aboutus.html")
+    if 'user' in request.session:
+        current_user = request.session['user']
+        param = {'uname1': current_user}
+        return render(request,"aboutus.html",param)
+    else:
+        return render(request,"aboutus.html")
 
 def register(request):
     if request.method=="POST":
@@ -108,6 +118,8 @@ def register(request):
         phoneNumber = request.POST['phoneNumber']
         pwd = request.POST['pwd']
         pwd1 = request.POST['pwd1']
+        if pwd != pwd1:
+            return render(request, 'register.html', {'alert_flag': True})
         USER1.firstname = fname
         USER1.lastname = lname
         USER1.date_of_birth = dob
@@ -117,30 +129,65 @@ def register(request):
         USER1.password = pwd
         USER1.confirmPwd = pwd1
         USER1.save()
-        return render(request,"help.html",context={'fname1':fname})
+        return render(request,"login.html")
     else:
         return render(request,"register.html")
 
 def dashboard(request):
-    return render(request,"dashboard.html")
+    if 'user' in request.session:
+        current_user = request.session['user']
+        param = {'uname1': current_user}
+        return render(request, 'dashboard.html', param)
 
 def contactus(request):
-    return render(request,"contactus.html")
+    if 'user' in request.session:
+        current_user = request.session['user']
+        param = {'uname1': current_user}
+        return render(request,"contactus.html",param)
+    else:
+        return render(request,"contactus.html")
 
+import random
+ 
 def personal_information(request):
-    return render(request,"personal_information.html")
+    
+    num = "%0.12d" % random.randint(0,999999999999)
+    
+    if 'user' in request.session:
+        current_user = request.session['user']
+        param = {'uname1': current_user}
+        return render(request,"personal_information.html",param)
+    else:
+        return render(request,"personal_information.html")
 
 def help_page(request):
-    return render(request,"help.html")
+    if 'user' in request.session:
+        current_user = request.session['user']
+        param = {'uname1': current_user}
+        return render(request,"help.html",param)
+    else:
+        return render(request,"help.html")
 
 def login(request):
     if request.method=="POST":
         uname = request.POST['uname']
+        uname_new = uname[:7]
         pwd = request.POST['pwd']
+        check_user = User1.objects.filter(email=uname, password=pwd)
+        if check_user:
+            request.session['user'] = uname_new
+            return render(request,'personal_information.html',context={'uname1':uname_new})
+        else:
+            return HttpResponse('Please enter valid Username or Password.')
+
+    return render(request, 'login.html')
         
-        if uname!= "" and pwd !="":
-            user = authenticate(request,username=uname,password = pwd)
-            
-    return render(request,"login.html")
 def footer(request):
     return render(request,"footer.html")
+
+def logout(request):
+    try:
+        del request.session['user']
+    except:
+        return redirect('login')
+    return redirect('login')
