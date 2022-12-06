@@ -69,8 +69,8 @@ def compare_faces(request):
         face_extract()
         face_extract1()
 
-        known_image = face_recognition.load_image_file("static/images/f2.jpg")
-        unknown_image = face_recognition.load_image_file("static/images/image.jpg")
+        known_image = face_recognition.load_image_file("static/images/doc_U1C7RfR.jpg")
+        unknown_image = face_recognition.load_image_file("static/images/image.jpeg")
 
         biden_encoding = face_recognition.face_encodings(known_image)[0]
         unknown_encoding = face_recognition.face_encodings(unknown_image)[0]
@@ -150,12 +150,11 @@ def contactus(request):
 import random
  
 def personal_information(request):
-    
     num = "%0.12d" % random.randint(0,999999999999)
-    
     if 'user' in request.session:
         current_user = request.session['user']
         param = {'uname1': current_user}
+        
         return render(request,"personal_information.html",param)
     else:
         return render(request,"personal_information.html")

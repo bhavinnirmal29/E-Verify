@@ -26,9 +26,15 @@
                 <li class="nav-item">
                   <a class="nav-link nav-link-style" href="{% url 'contactus' %}">Contact Us</a>
                 </li>
+              {% if uname1 %}
+                <li class="nav-item">
+                  <a class="nav-link nav-link-style" href="{% url 'dashboard' %}">Dashboard</a>
+                </li>
+              {% else %}
                 <li class="nav-item">
                   <a class="nav-link nav-link-style" href="#">Help</a>
                 </li>
+              {% endif %}
               </ul>
               {% if uname1 %}
                     <a class="btn btn-outline-success" href="#">{{uname1}}</a>
