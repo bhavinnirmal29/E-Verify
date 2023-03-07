@@ -22,3 +22,4 @@ class PersonalInfo(models.Model):
     address = models.CharField(max_length=50)
     document_status = models.CharField(max_length=50)
     account_number = models.IntegerField()
+    personal_Info_Status = models.CharField(max_length=10)

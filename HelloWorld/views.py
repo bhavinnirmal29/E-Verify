@@ -5,7 +5,7 @@ import cv2
 from django.http import HttpResponse
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import redirect 
-from .models import User1
+from .models import User1,PersonalInfo
 from django.contrib.auth import authenticate, login
 
 def get_doc(request):
@@ -134,9 +134,19 @@ def register(request):
         return render(request,"register.html")
 
 def dashboard(request):
+    
     if 'user' in request.session:
+        # email3 = request.session['email2']
+        # user_data = PersonalInfo.objects.get(email=email3)
+        # first_name = user_data.firstname
+        # last_name = user_data.lastname
+        # phone = user_data.phonenumber
+        # email = user_data.email
+        # address = user_data.address
+        # occupation = user_data.occupation
         current_user = request.session['user']
         param = {'uname1': current_user}
+        
         return render(request, 'dashboard.html', param)
 
 def contactus(request):
@@ -149,13 +159,66 @@ def contactus(request):
 
 import random
  
+def personal_Info_register(request):
+    email3 = request.session['email2']
+    try:
+        user_data = PersonalInfo.objects.filter(email=email3).exists()
+        if user_data == True:
+            user_info = PersonalInfo.objects.filter(email=email3)
+            first_name = user_info.firstname
+            last_name = user_info.lastname
+            phone = user_info.phonenumber
+            email = user_info.email
+            address = user_info.address
+            occupation = user_info.occupation
+            print(user_data)
+            param = {'fname': first_name,'lname':last_name,'phone':phone,'email':email,'addr':address,'occup':occupation}
+            return render(request,"dashboard.html",param)
+        else:
+            return render(request,"personal_information.html") 
+    except Exception as e:
+        print(e.message)
+        
+
 def personal_information(request):
-    num = "%0.12d" % random.randint(0,999999999999)
+    account_number = request.session['account_number']
+    email3 = request.session['email2']
+    user_data = PersonalInfo.objects.filter(email=email3).exists()
+    if user_data == True:
+        return render(request,"dashboard.html")
+    
     if 'user' in request.session:
         current_user = request.session['user']
         param = {'uname1': current_user}
-        
-        return render(request,"personal_information.html",param)
+        # user_id = request.POST.get("userid")
+        first_name = request.POST.get('firstName')
+        last_name = request.POST.get('lastName')
+        phone = request.POST.get('phone')
+        email = request.POST.get('email1') 
+        address = request.POST.get('address') 
+        occupation = request.POST.get('lastName')
+        print(occupation)
+        acc_no = account_number
+        personal_info_object=PersonalInfo.objects.create(firstname=first_name,lastname= last_name,
+        phonenumber= phone,
+        email= email,
+        occupation= occupation,
+        address = address,
+        document_status = "Unverified",
+        personal_Info_Status = "False",
+        account_number = acc_no)
+        # PersonalInfo1 = PersonalInfo()
+        # PersonalInfo1.firstname = first_name
+        # PersonalInfo1.lastname = last_name
+        # PersonalInfo1.phonenumber = phone
+        # PersonalInfo1.email = email
+        # PersonalInfo1.address = address
+        # PersonalInfo1.occupation = occupation
+        # PersonalInfo1.account_number = acc_no
+        # PersonalInfo1.document_status = "Unverified"
+        # PersonalInfo1.personal_Info_Status = "False"
+        param = {'fname':first_name,'doc_stat':'Unverified', 'lname':last_name,'email':email,'phone':phone,'addr':address,'occup':occupation,'balance':2000}
+        return render(request,"dashboard.html",param)
     else:
         return render(request,"personal_information.html")
 
@@ -173,14 +236,69 @@ def login(request):
         uname_new = uname[:7]
         pwd = request.POST['pwd']
         check_user = User1.objects.filter(email=uname, password=pwd)
+        num = "%0.12d" % random.randint(0,999999999999)
         if check_user:
             request.session['user'] = uname_new
-            return render(request,'personal_information.html',context={'uname1':uname_new})
+            request.session['account_number'] = num
+            request.session['email2'] = uname
+            personal_Info_register(request)
+            # return render(request,'personal_information.html',context={'uname1':uname_new,'acc_no1':num})
         else:
             return HttpResponse('Please enter valid Username or Password.')
+    else:
+        return render(request,"login.html")
+    
+def save_info(request):
+        personal_info_object=PersonalInfo.objects.create(user=User.objects.get(pk=user_id),firstname=first_name,lastname= last_name,
+        phonenumber= phone,
+        email= email,
+        occupation= occupation,
+        address = address,
+        document_status = "unverified",
+        account_number = acc_no)
+        if personal_info_object:
+                myfile = request.FILES['myfile']
+                fs = FileSystemStorage()
+                filename = fs.save("current/doc.jpg", myfile)
+                camera = cv2.VideoCapture(0)
+                while True:
+                        # Capture frame-by-frame
+                        success, frame1 = camera.read(0)  # read the camera frame
+                        if not success:
+                                break
+                        else:
+                                ret, buffer = cv2.imencode('.jpg', frame1)
+                                #     frame = buffer.tobytes()
+                                cv2.imwrite("pages/media/current/image.jpg", frame1)
+                                camera.release() 
+                                cv2.destroyAllWindows()
+                                break
+                face_extract()
+                face_extract1()
 
-    return render(request, 'login.html')
-        
+                known_image = face_recognition.load_image_file("pages/media/current/doc.jpg")
+                unknown_image = face_recognition.load_image_file("pages/media/current/image.jpg")
+
+                biden_encoding = face_recognition.face_encodings(known_image)[0]
+                unknown_encoding = face_recognition.face_encodings(unknown_image)[0]
+
+                results = face_recognition.compare_faces([biden_encoding], unknown_encoding,tolerance=0.5)
+                print(results)
+                if results==True:
+                        user_prof_obj=PersonalInfo.objects.filter(user=user_id,account_number=acc_no)    
+                        
+                        for object in user_prof_obj:
+                                object.document_status="verified"
+                                object.save()
+                else:
+                        user_prof_obj=PersonalInfo.objects.filter(user=user_id,account_number=acc_no)    
+                        
+                        for object in user_prof_obj:
+                                object.document_status="unverified"
+                                object.save()
+                return redirect("accounts_list_user")
+
+   
 def footer(request):
     return render(request,"footer.html")
 
